@@ -23,6 +23,8 @@ io.on('connection', (client) => {
         // console.log(personas);
         // emite el mensaje a la sala donde se unio la persona
         client.broadcast.to(data.sala).emit('listaPersonas', usuario.getPersonasPorSala(data.sala));
+        client.broadcast.to(data.sala).emit('crearMensaje', crearMensaje('Admin', `${data.nombre} entro al chat`));
+
         // / hace el collback con el arreglo de los usuarios en la sala
         callback(usuario.getPersonasPorSala(data.sala));
     });
@@ -36,11 +38,13 @@ io.on('connection', (client) => {
         client.broadcast.to(personaBorrada.sala).emit('listaPersonas', usuario.getPersonasPorSala(personaBorrada.sala));
     })
 
-    client.on('crearMensaje', (data) => {
+    client.on('crearMensaje', (data, callback) => {
         let persona = usuario.getPersona(client.id);
         let mensaje = crearMensaje(persona.nombre, data.mensaje);
         // emite el mensaje en la sala donde esta la persona
         client.broadcast.to(persona.sala).emit('crearMensaje', mensaje);
+        // retorna la respuesta
+        callback(mensaje);
     })
 
 

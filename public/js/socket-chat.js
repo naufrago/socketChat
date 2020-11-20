@@ -17,6 +17,8 @@ socket.on('connect', function() {
     // activa cuando una persona entra al chat
     socket.emit('entrarChat', { nombre: usuario, sala }, function(res) {
         console.log('usuarios conectados ', res);
+        renderizarUsuarios(res, false)
+            // renderizarMensaje({ nombre: 'Admin', mensaje: `${usuario} Ingreso al Chat`, fecha: `${new Date().getTime()}` });
     });
 });
 
@@ -28,18 +30,15 @@ socket.on('disconnect', function() {
 });
 
 
-// Enviar información
-// socket.emit('enviarMensaje', {
-//     usuario: 'Fernando',
-//     mensaje: 'Hola Mundo'
-// }, function(resp) {
-//     console.log('respuesta server: ', resp);
-// });
+
 
 // Escuchar información  para mostra mensajes
 socket.on('crearMensaje', function(mensaje) {
 
     console.log('Servidor:', mensaje);
+    renderizarMensaje(mensaje, false);
+    scrollBottom();
+
 
 });
 
@@ -47,6 +46,7 @@ socket.on('crearMensaje', function(mensaje) {
 socket.on('listaPersonas', function(personas) {
 
     console.log('listaPersonas:', personas);
+    renderizarUsuarios(personas)
 
 });
 
